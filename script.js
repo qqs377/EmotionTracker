@@ -90,4 +90,3 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         return colors[emotion] || "white";
     }
-});
