@@ -1,19 +1,25 @@
 //bubble chart
 document.addEventListener("DOMContentLoaded", () => {
+    // Set up initial emotion counts from localStorage or default to 0
     const emotions = ["happy", "sad", "angry", "excited", "calm", "anxious"];
-    const emotionCounts = { happy: 0, sad: 0, angry: 0, excited: 0, calm: 0, anxious: 0 };
+    const emotionCounts = JSON.parse(localStorage.getItem("emotionCounts")) || {
+        happy: 0, sad: 0, angry: 0, excited: 0, calm: 0, anxious: 0
+    };
 
     const bubbleChartCanvas = document.getElementById("bubbleChart").getContext("2d");
     let bubbleChart;
 
+    // Event listeners for emotion buttons
     document.querySelectorAll(".emotion").forEach(button => {
         button.addEventListener("click", () => {
             const emotion = button.getAttribute("data-emotion");
             emotionCounts[emotion]++;  // Increase count for that emotion
+            localStorage.setItem("emotionCounts", JSON.stringify(emotionCounts));  // Update localStorage
             updateBubbleChart();
         });
     });
 
+    // Function to update the bubble chart with current data
     function updateBubbleChart() {
         const bubbleData = emotions.map((emotion, index) => ({
             x: Math.random() * 10,  // Random placement for word-cloud effect
@@ -23,13 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
             label: `${emotion}: ${emotionCounts[emotion]}`
         }));
 
+        // Update or create the bubble chart
         if (bubbleChart) {
             bubbleChart.data.datasets[0].data = bubbleData;
             bubbleChart.update();
         } else {
             bubbleChart = new Chart(bubbleChartCanvas, {
                 type: 'bubble',
-                data: { datasets: [{ label: "Emotions Over Time", data: bubbleData }] },
+                data: { datasets: [{ label: "Emotions", data: bubbleData }] },
                 options: {
                     responsive: true,
                     plugins: {
@@ -38,19 +45,37 @@ document.addEventListener("DOMContentLoaded", () => {
                                 label: (context) => context.raw.label
                             }
                         }
+                    },
+                    scales: {
+                        x: { display: false },  // Hide x-axis
+                        y: { display: false },  // Hide y-axis
+                    },
+                    layout: {
+                        padding: { top: 0, bottom: 0, left: 0, right: 0 }
+                    },
+                    elements: {
+                        point: { radius: 0 }  // Remove point styling for cleaner bubbles
+                    },
+                    animation: {
+                        duration: 0  // Disable animation for instant update
                     }
                 }
             });
         }
     }
 
+    // Function to determine bubble color based on emotion
     function getColor(emotion) {
         return {
             happy: "yellow", sad: "blue", angry: "red",
             excited: "orange", calm: "green", anxious: "purple"
         }[emotion];
     }
+
+    // Initialize the chart with existing data
+    updateBubbleChart();
 });
+
 
 //wave graph
 
