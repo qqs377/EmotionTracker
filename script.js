@@ -1,52 +1,41 @@
+//bubble chart
 document.addEventListener("DOMContentLoaded", () => {
-    const emotions = document.querySelectorAll(".emotion");
+    const emotions = ["happy", "sad", "angry", "excited", "calm", "anxious"];
+    const emotionCounts = { happy: 0, sad: 0, angry: 0, excited: 0, calm: 0, anxious: 0 };
+
     const bubbleChartCanvas = document.getElementById("bubbleChart").getContext("2d");
-    const waveGraphCanvas = document.getElementById("waveGraph").getContext("2d");
+    let bubbleChart;
 
-    let emotionData = [];
-    let bubbleChart, waveGraph;
-
-    emotions.forEach(button => {
+    document.querySelectorAll(".emotion").forEach(button => {
         button.addEventListener("click", () => {
             const emotion = button.getAttribute("data-emotion");
-            const timestamp = new Date().toISOString();
-            emotionData.push({ emotion, timestamp });
-
-            updateCharts();
+            emotionCounts[emotion]++;  // Increase count for that emotion
+            updateBubbleChart();
         });
     });
 
-    function updateCharts() {
-        updateBubbleChart();
-        updateWaveGraph();
-    }
-
     function updateBubbleChart() {
-        const formattedData = emotionData.map((data, index) => ({
-            x: index, y: Math.random() * 10, r: 10,
-            backgroundColor: getColor(data.emotion),
-            label: data.emotion
+        const bubbleData = emotions.map((emotion, index) => ({
+            x: Math.random() * 10,  // Random placement for word-cloud effect
+            y: Math.random() * 10,
+            r: Math.max(10, emotionCounts[emotion] * 5),  // Size grows with input count
+            backgroundColor: getColor(emotion),
+            label: `${emotion}: ${emotionCounts[emotion]}`
         }));
 
         if (bubbleChart) {
-            bubbleChart.data.datasets = [{
-                label: "Emotions Over Time",
-                data: formattedData,
-                backgroundColor: formattedData.map(d => d.backgroundColor)
-            }];
+            bubbleChart.data.datasets[0].data = bubbleData;
             bubbleChart.update();
         } else {
             bubbleChart = new Chart(bubbleChartCanvas, {
                 type: 'bubble',
-                data: { datasets: [{ label: "Emotions Over Time", data: formattedData }] },
+                data: { datasets: [{ label: "Emotions Over Time", data: bubbleData }] },
                 options: {
                     responsive: true,
                     plugins: {
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    return `Emotion: ${context.raw.label}`;
-                                }
+                                label: (context) => context.raw.label
                             }
                         }
                     }
@@ -54,6 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
+
+    function getColor(emotion) {
+        return {
+            happy: "yellow", sad: "blue", angry: "red",
+            excited: "orange", calm: "green", anxious: "purple"
+        }[emotion];
+    }
+});
+
+//wave graph
 
     function updateWaveGraph() {
         const labels = emotionData.map(data => new Date(data.timestamp).toLocaleTimeString());
