@@ -23,18 +23,31 @@ document.querySelectorAll('.emotion').forEach(button => {
 function updateWordCloud() {
     const wordCloudData = Object.keys(emotionCounts).map(emotion => ({
         text: emotion,
-        weight: emotionCounts[emotion] * 10 // Adjust weight to increase/decrease the size
+        weight: emotionCounts[emotion] * 10, // Adjust weight to increase/decrease the size
+        className: emotion // Add the emotion as a class for color styling
     }));
 
+    // WordCloud expects a list of pairs [text, weight]
+    const wordList = wordCloudData.map(data => [data.text, data.weight]);
+
     WordCloud(document.getElementById('wordCloud'), {
-        list: wordCloudData,
+        list: wordList, // Pass the word list to WordCloud
         gridSize: 18,
         weightFactor: 5,
         fontFamily: 'Arial',
         color: 'random-dark',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        hover: function (event, word, item) {
+            // Apply the emotion class on hover to change color
+            item.classList.add(word.className);
+        },
+        click: function (event, word, item) {
+            // Optional: Handle click event for the words
+            console.log(word.text + " clicked!");
+        }
     });
 }
+
 
 
 //wave graph
