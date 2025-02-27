@@ -8,16 +8,24 @@ let emotionCounts = {
     anxious: 0
 };
 
-// Handle click events for each emotion button
-document.querySelectorAll('.emotion').forEach(button => {
-    button.addEventListener('click', () => {
-        const emotion = button.dataset.emotion;
-        emotionCounts[emotion]++;
+// Initialize WordCloud only when the library is loaded
+function initializeWordCloud() {
+    if (typeof WordCloud === "undefined") {
+        console.error("WordCloud library not loaded");
+        return;
+    }
 
-        // Update word cloud based on the counts
-        updateWordCloud();
+    // Handle click events for each emotion button
+    document.querySelectorAll('.emotion').forEach(button => {
+        button.addEventListener('click', () => {
+            const emotion = button.dataset.emotion;
+            emotionCounts[emotion]++;
+
+            // Update word cloud based on the counts
+            updateWordCloud();
+        });
     });
-});
+}
 
 // Function to update the word cloud with current emotion counts
 function updateWordCloud() {
@@ -30,24 +38,28 @@ function updateWordCloud() {
     // WordCloud expects a list of pairs [text, weight]
     const wordList = wordCloudData.map(data => [data.text, data.weight]);
 
-    WordCloud(document.getElementById('wordCloud'), {
-        list: wordList, // Pass the word list to WordCloud
-        gridSize: 18,
-        weightFactor: 5,
-        fontFamily: 'Arial',
-        color: 'random-dark',
-        backgroundColor: '#fff',
-        hover: function (event, word, item) {
-            // Apply the emotion class on hover to change color
-            item.classList.add(word.className);
-        },
-        click: function (event, word, item) {
-            // Optional: Handle click event for the words
-            console.log(word.text + " clicked!");
-        }
-    });
+    // Ensure WordCloud is defined before attempting to use it
+    if (typeof WordCloud === "function") {
+        WordCloud(document.getElementById('wordCloud'), {
+            list: wordList, // Pass the word list to WordCloud
+            gridSize: 18,
+            weightFactor: 5,
+            fontFamily: 'Arial',
+            color: 'random-dark',
+            backgroundColor: '#fff',
+            hover: function (event, word, item) {
+                // Apply the emotion class on hover to change color
+                item.classList.add(word.className);
+            },
+            click: function (event, word, item) {
+                // Optional: Handle click event for the words
+                console.log(word.text + " clicked!");
+            }
+        });
+    } else {
+        console.error("WordCloud function is not defined");
+    }
 }
-
 
 
 //wave graph
