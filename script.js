@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch emotion data from backend
     async function fetchEmotions() {
         try {
-            const response = await fetch("/get-emotions");
+            // Update the URL to your Render backend
+            const response = await fetch("https://emotiontracker.onrender.com/get-emotions");
             const data = await response.json();
             generateWordCloud(data);
         } catch (error) {
@@ -19,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to send emotion data to backend
     async function sendEmotion(emotion) {
         try {
-            await fetch("/update-emotion", {
+            // Update the URL to your Render backend
+            await fetch("https://emotiontracker.onrender.com/update-emotion", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -50,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial fetch to populate the word cloud
     fetchEmotions();
 });
+
 
 
 //wave graph
