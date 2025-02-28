@@ -51,8 +51,9 @@ function generateWordCloud(emotionData) {
 
         // Clear any previous word cloud
         const canvas = document.getElementById("wordCloud");
-        canvas.width = canvas.offsetWidth;
-        canvas.height = 400; // Match the max-height from CSS
+            //canvas.width = canvas.offsetWidth;
+            canvas.width = window.innerWidth;  // Make the canvas span the full width
+            canvas.height = window.innerHeight; 
 
         // Use WordCloud.js to generate the cloud
      WordCloud(canvas, {
