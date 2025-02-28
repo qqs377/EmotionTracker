@@ -33,47 +33,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 function generateWordCloud(emotionData) {
-    // Check the data before proceeding
-    console.log("Emotion data:", emotionData);
+        console.log("Emotion data:", emotionData);
 
-    // Set the minimum and maximum font sizes
-    const minFontSize = 10;
-    const maxFontSize = 100;
+        // Find the maximum count to use for normalization
+        const maxCount = Math.max(...Object.values(emotionData));
+        const maxWordSize = 100;  // Maximum size for the largest word
+        const scaleFactor = maxWordSize / maxCount;
+        
+        // Create a list of words in the format WordCloud.js expects
+        const words = Object.entries(emotionData).map(([emotion, count]) => {
+            // Scale the word size proportionally, ensuring it's at least 10
+            const wordSize = Math.max(count * scaleFactor, 10);  // Min size to prevent too small words
+            return [emotion, wordSize];
+        });
 
-    // Find the maximum count
-    const maxCount = Math.max(...Object.values(emotionData));
-    const minCount = Math.min(...Object.values(emotionData));
+        console.log("Words for word cloud:", words);
 
-    // Map the counts to font sizes between the minimum and maximum
-    const scaleFactor = (count) => {
-        const normalizedSize = (count - minCount) / (maxCount - minCount);
-        return minFontSize + normalizedSize * (maxFontSize - minFontSize);
-    };
+        // Clear any previous word cloud
+        const canvas = document.getElementById("wordCloud");
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 400; // Match the max-height from CSS
 
-    // Create a list of words in the format WordCloud.js expects
-    const words = Object.entries(emotionData).map(([emotion, count]) => {
-        const wordSize = scaleFactor(count);
-        return [emotion, wordSize];
-    });
-
-    console.log("Words for word cloud:", words);
-
-    // Clear any previous word cloud
-    const canvas = document.getElementById("wordCloud");
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 400; // Match the max-height from CSS
-
-    // Use WordCloud.js to generate the cloud
-    WordCloud(canvas, {
+        // Use WordCloud.js to generate the cloud
+     WordCloud(canvas, {
         list: words,
-        gridSize: 10,
-        weightFactor: 2,
+        gridSize: 8,
+        weightFactor: 3,  // Increased weight factor for a wider size distribution
         color: "white",
         backgroundColor: "#7d6a66",
-        minSize: minFontSize,
-        maxSize: maxFontSize,
+        drawOutOfBound: true, // Allow words to go outside the canvas
+        rotateRatio: 0, // Keep words unrotated to avoid them being pushed out
     });
 }
+
 
 
     // Attach event listeners to buttons
