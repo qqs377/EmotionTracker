@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch emotion data from backend
     async function fetchEmotions() {
         try {
-            // Update the URL to your Render backend
             const response = await fetch("https://emotiontracker.onrender.com/get-emotions");
             const data = await response.json();
             generateWordCloud(data);
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to send emotion data to backend
     async function sendEmotion(emotion) {
         try {
-            // Update the URL to your Render backend
             await fetch("https://emotiontracker.onrender.com/update-emotion", {
                 method: "POST",
                 headers: {
@@ -66,63 +64,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial fetch to populate the word cloud
     fetchEmotions();
-});
 
-// Wave Graph
-async function fetchEmotionHistory() {
-    try {
-        const response = await fetch("https://emotiontracker.onrender.com/get-emotion-history");
-        const data = await response.json();
-        plotWaveGraph(data);
-    } catch (error) {
-        console.error("Error fetching emotion history:", error);
-    }
-}
-
-function plotWaveGraph(data) {
-    const ctx = document.getElementById("waveGraph").getContext("2d");
-
-    // Process data into timestamps and counts
-    const labels = data.map(entry => new Date(entry.timestamp).toLocaleTimeString());
-    const counts = {};
-
-    data.forEach(entry => {
-        counts[entry.timestamp] = (counts[entry.timestamp] || 0) + 1;
-    });
-
-    const values = Object.values(counts);
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Emotions Over Time",
-                data: values,
-                borderColor: "#ff6384",
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: { title: { display: true, text: "Time" } },
-                y: { title: { display: true, text: "Emotion Count" } }
-            }
+    // Wave Graph
+    async function fetchEmotionHistory() {
+        try {
+            const response = await fetch("https://emotiontracker.onrender.com/get-emotion-history");
+            const data = await response.json();
+            plotWaveGraph(data);
+        } catch (error) {
+            console.error("Error fetching emotion history:", error);
         }
-    });
-}
+    }
 
-// Attach event listeners to buttons for wave graph
-buttons.forEach(button => {
-    button.addEventListener("click", async () => {
-        const emotion = button.dataset.emotion;
-        await sendEmotion(emotion); // Send emotion to server
-        fetchEmotionHistory(); // Fetch and update wave graph
+    function plotWaveGraph(data) {
+        const ctx = document.getElementById("waveGraph").getContext("2d");
+
+        // Process data into timestamps and counts
+        const labels = data.map(entry => new Date(entry.timestamp).toLocaleTimeString());
+        const counts = {};
+
+        data.forEach(entry => {
+            counts[entry.timestamp] = (counts[entry.timestamp] || 0) + 1;
+        });
+
+        const values = Object.values(counts);
+
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Emotions Over Time",
+                    data: values,
+                    borderColor: "#ff6384",
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: "Time" } },
+                    y: { title: { display: true, text: "Emotion Count" } }
+                }
+            }
+        });
+    }
+
+    // Attach event listeners to buttons for wave graph
+    buttons.forEach(button => {
+        button.addEventListener("click", async () => {
+            const emotion = button.dataset.emotion;
+            await sendEmotion(emotion); // Send emotion to server
+            fetchEmotionHistory(); // Fetch and update wave graph
+        });
     });
+
+    // Initial fetch to populate the wave graph
+    fetchEmotionHistory();
 });
-
-// Initial fetch to populate the wave graph
-fetchEmotionHistory();
