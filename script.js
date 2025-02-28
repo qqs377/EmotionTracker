@@ -5,13 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("wordCloud");
     const emotionLog = document.getElementById("emotion-log"); //global log
     const myEmotionsLog = document.getElementById("my-emotions-log");
-    
+
+    const { createClient } = require('@supabase/supabase-js');
+    const SUPABASE_URL = "https://vadnoeekoavournnxuqh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZG5vZWVrb2F2b3Vybm54dXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA3NzA1NTIsImV4cCI6MjA1NjM0NjU1Mn0.RA0-beDK1Xk_9raOua0_XADbCxuFef3AVqEydkewbxY";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // Function to fetch emotion data from backend for word cloud
     async function fetchEmotions() {
         try {
-            const response = await fetch("https://emotiontracker.onrender.com/get-emotions");
-            const data = await response.json();
+            const { data, error } = await supabase
+                .from('emotions')
+                .select('emotion, count(*)')
+                .group('emotion');
+
+            if (error) throw error;
+
+            const emotionData = {};
+            data.forEach(item => {
+                emotionData[item.emotion] = item.count;
+            });
+            
             generateWordCloud(data);
         } catch (error) {
             console.error("Error fetching emotion data:", error);
@@ -21,8 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch emotion history and update the log
     async function fetchEmotionHistory() {
         try {
-            const response = await fetch("https://emotiontracker.onrender.com/get-emotion-history");
-            const data = await response.json();
+            const { data, error } = await supabase
+                .from('emotions')
+                .select('emotion, timestamp')
+                .order('timestamp', { ascending: false });
+
+            if (error) throw error;
+            
             updateGlobalLog(data);
 
         } catch (error) {
@@ -109,11 +128,11 @@ function renderMyEmotions() {
         });
 
         try {
-            await fetch("https://emotiontracker.onrender.com/update-emotion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ emotion })
-            });
+            const { data, error } = await supabase
+                .from('emotions')
+                .insert([{ emotion, timestamp }]);
+
+            if (error) throw error;
 
             fetchEmotionHistory(); // Refresh global log
 
