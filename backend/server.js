@@ -22,7 +22,7 @@ db.run(`
 // Endpoint to update emotion count
 app.post("/update-emotion", (req, res) => {
     const { emotion } = req.body;
-    const timestamp = new Date().toISOString(); // Current time
+    const timestamp = new Date().toLocaleString(); // Current time
 
     // Insert new emotion entry with timestamp
     db.run(
