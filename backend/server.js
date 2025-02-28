@@ -22,9 +22,21 @@ db.run(`
 // Endpoint to update emotion count
 app.post("/update-emotion", (req, res) => {
     const { emotion } = req.body;
-    const timestamp = new Date().toLocaleString(); // Current time
 
-    // Insert new emotion entry with timestamp
+    // Get the current time in Eastern Standard Time (EST)
+    const timestamp = new Date().toLocaleString("en-US", {
+        timeZone: "America/New_York", // Set the timezone to EST
+        hour12: false,                 // Optional: Use 24-hour time format
+        weekday: "short",             // Optional: Abbreviated weekday
+        year: "numeric",
+        month: "long",                // Full month name
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+    });
+
+    // Insert new emotion entry with timestamp in EST
     db.run(
         "INSERT INTO emotions (emotion, timestamp) VALUES (?, ?)",
         [emotion, timestamp],
