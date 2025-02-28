@@ -34,13 +34,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function generateWordCloud(emotionData) {
+function generateWordCloud(emotionData) {
     // Check the data before proceeding
     console.log("Emotion data:", emotionData);
 
+    // Find the maximum count to use for normalization
+    const maxCount = Math.max(...Object.values(emotionData));
+    const maxWordSize = 100;  // Maximum size for the largest word
+    const scaleFactor = maxWordSize / maxCount;
+    
     // Create a list of words in the format WordCloud.js expects
-    const words = Object.entries(emotionData).map(([emotion, count]) => [emotion, count * 10]); // Scaling word size
+    const words = Object.entries(emotionData).map(([emotion, count]) => {
+        // Scale the word size proportionally
+        const wordSize = count * scaleFactor;
+        return [emotion, wordSize];
+    });
+
     console.log("Words for word cloud:", words);
+
 
     // Clear any previous word cloud
     const canvas = document.getElementById("wordCloud");
