@@ -56,36 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-   // Function to update the global log UI
-    function updateGlobalLog(data) {
-
-            // Sort by timestamp (newest first)
-            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-            // Clear previous log entries
-            emotionLog.innerHTML = "";
-
-            // Add each emotion entry to the log
-            data.forEach(entry => {
-                const listItem = document.createElement("li");
-                listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
-                emotionLog.appendChild(listItem);
-            });
-    }
-
-    // Function to update "My Emotions" log UI
-    function updateMyEmotionsLog() {
-        const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
-        myEmotionsLog.innerHTML = ""; // Clear before appending new items
-
-        storedMyEmotions.forEach(entry => {
-            const listItem = document.createElement("li");
-            listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
-            myEmotionsLog.appendChild(listItem);
-        });
-    }
-
 // render logs
     function addEmotionToLog(logId, timestamp, emotion) {
     const logElement = document.getElementById(logId);
@@ -97,27 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add to the top of the list (most recent first)
     logElement.prepend(listItem);
-}
-
-function renderMyEmotions() {
-    const myLogElement = document.getElementById("my-emotions-log");
-    if (!myLogElement) return;
-
-    // Retrieve saved emotions from local storage
-    const myEmotions = JSON.parse(localStorage.getItem("myEmotions")) || [];
-
-    // Sort by timestamp (newest first)
-    myEmotions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-    // Clear current list
-    myLogElement.innerHTML = "";
-
-    // Append each emotion to the list
-    myEmotions.forEach(entry => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${entry.timestamp} ${entry.emotion}`;
-        myLogElement.prepend(listItem);
-    });
 }
 
 
@@ -163,7 +112,35 @@ function renderMyEmotions() {
         }
     }
 
-    
+ // Function to update "My Emotions" log UI
+    function updateMyEmotionsLog() {
+        const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
+        myEmotionsLog.innerHTML = ""; // Clear before appending new items
+
+        storedMyEmotions.forEach(entry => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+            myEmotionsLog.appendChild(listItem);
+        });
+    }    
+
+// Function to update the global log UI
+    function updateGlobalLog(data) {
+
+            // Sort by timestamp (newest first)
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+            // Clear previous log entries
+            emotionLog.innerHTML = "";
+
+            // Add each emotion entry to the log
+            data.forEach(entry => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+                emotionLog.appendChild(listItem);
+            });
+    }
+
 
 function generateWordCloud(emotionData) {
         console.log("Emotion data:", emotionData);
@@ -228,5 +205,5 @@ function generateWordCloud(emotionData) {
     // Initial fetch, load stored data on page load
     fetchEmotions();
     fetchEmotionHistory();
-    renderMyEmotions(); // Load user's personal emotions from local storage
+    updateMyEmotionsLog();; // Load user's personal emotions from local storage
 });
