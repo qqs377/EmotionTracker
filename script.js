@@ -56,6 +56,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+// render logs
+    function addEmotionToLog(logId, timestamp, emotion) {
+    const logElement = document.getElementById(logId);
+    if (!logElement) return;
+
+    // Create a new list item
+    const listItem = document.createElement("li");
+    listItem.textContent = `${timestamp} ${emotion}`;
+
+    // Add to the top of the list (most recent first)
+    logElement.prepend(listItem);
+}
+
+function renderMyEmotions() {
+    const myLogElement = document.getElementById("my-emotions-log");
+    if (!myLogElement) return;
+
+    // Clear current list
+    myLogElement.innerHTML = "";
+
+    // Retrieve saved emotions from local storage
+    const myEmotions = JSON.parse(localStorage.getItem("myEmotions")) || [];
+
+    // Append each emotion to the list
+    myEmotions.forEach(entry => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${entry.timestamp} ${entry.emotion}`;
+        myLogElement.prepend(listItem);
+    });
+}
+
+
     // Function to send an emotion to the backend and save it locally
     async function sendEmotion(emotion) {
         const timestamp = new Date().toLocaleString("en-US", {
@@ -83,6 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
             storedMyEmotions.push({ emotion, timestamp }); // Add new emotion
             localStorage.setItem("myEmotions", JSON.stringify(storedMyEmotions));
 
+            // Update the global emotion log instantly
+            addEmotionToLog("emotion-log", timestamp, emotion);
+
+            // Also fetch the latest emotions to update the word cloud
+            fetchEmotions();
+
             updateMyEmotionsLog(); // Refresh user-specific log
         } catch (error) {
             console.error("Error sending emotion data:", error);
@@ -90,21 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     
-    // Function to send emotion data to backend
-    async function sendEmotion(emotion) {
-        try {
-            await fetch("https://emotiontracker.onrender.com/update-emotion", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ emotion })
-            });
-            fetchEmotions(); // Refresh word cloud
-        } catch (error) {
-            console.error("Error sending emotion data:", error);
-        }
-    }
 
 function generateWordCloud(emotionData) {
         console.log("Emotion data:", emotionData);
@@ -154,4 +177,5 @@ function generateWordCloud(emotionData) {
     // Initial fetch, load stored data on page load
     fetchEmotions();
     fetchEmotionHistory();
+    renderMyEmotions(); // Load user's personal emotions from local storage
 });
