@@ -34,13 +34,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Generate word cloud from emotion data
     function generateWordCloud(emotionData) {
-        const words = Object.entries(emotionData).map(([emotion, count]) => [emotion, count * 10]); // Scale word size
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        WordCloud(canvas, { list: words, gridSize: 10, weightFactor: 2, color: "white" });
-    }
+    // Check the data before proceeding
+    console.log("Emotion data:", emotionData);
 
+    // Create a list of words in the format WordCloud.js expects
+    const words = Object.entries(emotionData).map(([emotion, count]) => [emotion, count * 10]); // Scaling word size
+    console.log("Words for word cloud:", words);
+
+    // Clear any previous word cloud
+    const canvas = document.getElementById("wordCloud");
+    canvas.width = canvas.width;  // Clears the canvas
+
+    // Use WordCloud.js to generate the cloud
+    WordCloud(canvas, {
+        list: words,
+        gridSize: 10,
+        weightFactor: 2,
+        color: "white",
+        backgroundColor: "#7d6a66",
+    });
+}
+  
     // Attach event listeners to buttons
     buttons.forEach(button => {
         button.addEventListener("click", () => {
@@ -55,41 +70,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-//wave graph
-
-    function updateWaveGraph() {
-        const labels = emotionData.map(data => new Date(data.timestamp).toLocaleTimeString());
-        const values = emotionData.map((_, index) => Math.random() * 10);
-
-        if (waveGraph) {
-            waveGraph.data.labels = labels;
-            waveGraph.data.datasets[0].data = values;
-            waveGraph.update();
-        } else {
-            waveGraph = new Chart(waveGraphCanvas, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Emotion Trends',
-                        data: values,
-                        borderColor: 'white',
-                        fill: false
-                    }]
-                },
-                options: { responsive: true }
-            });
-        }
-    }
-
-    function getColor(emotion) {
-        const colors = {
-            happy: "yellow",
-            sad: "blue",
-            angry: "red",
-            excited: "orange",
-            calm: "green",
-            anxious: "purple"
-        };
-        return colors[emotion] || "white";
-    }
