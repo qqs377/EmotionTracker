@@ -1,18 +1,15 @@
 //word cloud
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (typeof supabase === "undefined") {
-        console.error("Supabase is not loaded correctly.");
-        return;
-    }
+
+    const SUPABASE_URL = "https://vadnoeekoavournnxuqh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZG5vZWVrb2F2b3Vybm54dXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA3NzA1NTIsImV4cCI6MjA1NjM0NjU1Mn0.RA0-beDK1Xk_9raOua0_XADbCxuFef3AVqEydkewbxY";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);  
+    
     const buttons = document.querySelectorAll(".emotion");
     const canvas = document.getElementById("wordCloud");
     const emotionLog = document.getElementById("emotion-log"); //global log
     const myEmotionsLog = document.getElementById("my-emotions-log");
-
-    const SUPABASE_URL = "https://vadnoeekoavournnxuqh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZG5vZWVrb2F2b3Vybm54dXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA3NzA1NTIsImV4cCI6MjA1NjM0NjU1Mn0.RA0-beDK1Xk_9raOua0_XADbCxuFef3AVqEydkewbxY";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);  
 
     // Function to fetch emotion data from backend for word cloud
     async function fetchEmotions() {
