@@ -1,6 +1,10 @@
 //word cloud
 
 document.addEventListener("DOMContentLoaded", () => {
+    if (typeof supabase === "undefined") {
+        console.error("Supabase is not loaded correctly.");
+        return;
+    }
     const buttons = document.querySelectorAll(".emotion");
     const canvas = document.getElementById("wordCloud");
     const emotionLog = document.getElementById("emotion-log"); //global log
