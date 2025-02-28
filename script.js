@@ -133,16 +133,7 @@ function renderMyEmotions() {
             minute: "numeric",
             second: "numeric",
         });
-
-        try {
-            const { data, error } = await supabase
-                .from('emotions')
-                .insert([{ emotion, timestamp }]);
-
-            if (error) throw error;
-
-            fetchEmotionHistory(); // Refresh global log
-
+        try{
             // Save to "My Emotions" log (local storage)
             const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
             storedMyEmotions.push({ emotion, timestamp }); // Add new emotion
@@ -154,6 +145,15 @@ function renderMyEmotions() {
             // Update the user-specific emotion log instantly
             updateMyEmotionsLog(); 
 
+            //insert emotion into Supabase SQL (backend)
+            const { data, error } = await supabase
+                .from('emotions')
+                .insert([{ emotion, timestamp }]);
+
+            if (error) throw error;
+
+            fetchEmotionHistory(); // Refresh global log
+                 
             // Also fetch the latest emotions to update the word cloud
             fetchEmotions();
 
