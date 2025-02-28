@@ -62,5 +62,27 @@ canvas {
 }
 
 
+// emotion log
+
+.log-container {
+    margin-top: 20px;
+    background-color: transparent; /* Make background transparent */
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#emotion-log {
+    list-style-type: none;
+    padding: 0;
+    color: white; /* Set text color to white */
+}
+
+#emotion-log li {
+    padding: 5px;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Light white border for separation */
+}
 
 
