@@ -54,6 +54,7 @@ canvas {
     max-height: 400px;
     display: block;
     object-fit: contain;
+    margin-bottom: 20px;
 }
 
 
