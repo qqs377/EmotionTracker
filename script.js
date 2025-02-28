@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".emotion");
     const canvas = document.getElementById("wordCloud");
     const emotionLog = document.getElementById("emotion-log"); //global log
-    const myEmotionsLog = document.getElementbyId("my-emotions-log");
+    const myEmotionsLog = document.getElementById("my-emotions-log");
     
 
     // Function to fetch emotion data from backend for word cloud
