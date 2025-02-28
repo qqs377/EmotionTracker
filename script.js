@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             //call the function to generate the word cloud
-            generateWordCloud(data);
+            generateWordCloud(emotionData);
         } catch (error) {
             console.error("Error fetching emotion data:", error);
         }
@@ -49,11 +49,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (error) throw error;
             
-            updateGlobalLog(emotionData);
+            updateGlobalLog(data);
 
         } catch (error) {
             console.error("Error fetching emotion history:", error);
         }
+    }
+
+
+   // Function to update the global log UI
+    function updateGlobalLog(data) {
+
+            // Sort by timestamp (newest first)
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+            // Clear previous log entries
+            emotionLog.innerHTML = "";
+
+            // Add each emotion entry to the log
+            data.forEach(entry => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+                emotionLog.appendChild(listItem);
+            });
+    }
+
+    // Function to update "My Emotions" log UI
+    function updateMyEmotionsLog() {
+        const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
+        myEmotionsLog.innerHTML = ""; // Clear before appending new items
+
+        storedMyEmotions.forEach(entry => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+            myEmotionsLog.appendChild(listItem);
+        });
     }
 
 // render logs
@@ -67,6 +97,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add to the top of the list (most recent first)
     logElement.prepend(listItem);
+}
+
+function renderMyEmotions() {
+    const myLogElement = document.getElementById("my-emotions-log");
+    if (!myLogElement) return;
+
+    // Retrieve saved emotions from local storage
+    const myEmotions = JSON.parse(localStorage.getItem("myEmotions")) || [];
+
+    // Sort by timestamp (newest first)
+    myEmotions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // Clear current list
+    myLogElement.innerHTML = "";
+
+    // Append each emotion to the list
+    myEmotions.forEach(entry => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${entry.timestamp} ${entry.emotion}`;
+        myLogElement.prepend(listItem);
+    });
 }
 
 
@@ -112,35 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
- // Function to update "My Emotions" log UI
-    function updateMyEmotionsLog() {
-        const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
-        myEmotionsLog.innerHTML = ""; // Clear before appending new items
-
-        storedMyEmotions.forEach(entry => {
-            const listItem = document.createElement("li");
-            listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
-            myEmotionsLog.appendChild(listItem);
-        });
-    }    
-
-// Function to update the global log UI
-    function updateGlobalLog(data) {
-
-            // Sort by timestamp (newest first)
-            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-            // Clear previous log entries
-            emotionLog.innerHTML = "";
-
-            // Add each emotion entry to the log
-            data.forEach(entry => {
-                const listItem = document.createElement("li");
-                listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
-                emotionLog.appendChild(listItem);
-            });
-    }
-
+    
 
 function generateWordCloud(emotionData) {
         console.log("Emotion data:", emotionData);
@@ -165,7 +188,7 @@ function generateWordCloud(emotionData) {
      // Ensure the canvas has valid dimensions before using it
     if (canvas) {
         canvas.width = window.innerWidth;  // Make the canvas span the full width
-        canvas.height = window.innerHeight; //Adjust the height accordingly
+        canvas.height = window.innerHeight; // Adjust the height accordingly
     } else {
     console.error("Canvas not found!");
     return;
@@ -205,5 +228,5 @@ function generateWordCloud(emotionData) {
     // Initial fetch, load stored data on page load
     fetchEmotions();
     fetchEmotionHistory();
-    updateMyEmotionsLog();; // Load user's personal emotions from local storage
+    renderMyEmotions(); // Load user's personal emotions from local storage
 });
