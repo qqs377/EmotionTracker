@@ -151,10 +151,13 @@ function renderMyEmotions() {
             // Update the global emotion log instantly
             addEmotionToLog("emotion-log", timestamp, emotion);
 
+            // Update the user-specific emotion log instantly
+            updateMyEmotionsLog(); 
+
             // Also fetch the latest emotions to update the word cloud
             fetchEmotions();
 
-            updateMyEmotionsLog(); // Refresh user-specific log
+
         } catch (error) {
             console.error("Error sending emotion data:", error);
         }
