@@ -33,6 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Function to update the global log UI
     function updateGlobalLog(data) {
+
+            // Sort by timestamp (newest first)
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
             // Clear previous log entries
             emotionLog.innerHTML = "";
 
@@ -73,11 +77,14 @@ function renderMyEmotions() {
     const myLogElement = document.getElementById("my-emotions-log");
     if (!myLogElement) return;
 
-    // Clear current list
-    myLogElement.innerHTML = "";
-
     // Retrieve saved emotions from local storage
     const myEmotions = JSON.parse(localStorage.getItem("myEmotions")) || [];
+
+    // Sort by timestamp (newest first)
+    myEmotions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // Clear current list
+    myLogElement.innerHTML = "";
 
     // Append each emotion to the list
     myEmotions.forEach(entry => {
