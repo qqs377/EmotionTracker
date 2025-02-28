@@ -62,7 +62,7 @@ function generateWordCloud(emotionData) {
         color: "white",
         backgroundColor: "#7d6a66",
         drawOutOfBound: true, // Allow words to go outside the canvas
-        rotateRatio: 0, // Keep words unrotated to avoid them being pushed out
+        //rotateRatio: 0, // Keep words unrotated to avoid them being pushed out
     });
 }
 
