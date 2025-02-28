@@ -87,6 +87,12 @@ canvas {
     padding: 0;
     color: white; /* Set text color to white */
     text-align: center; /* Center list items */
+    max-height: 400px;  /* Set a max height for the container */
+    min-height: 150px;  /* Ensure the container has a minimum height */
+    overflow-y: scroll;   /* Enable vertical scrolling */
+    padding-right: 10px; /* Optional: to prevent scrollbar overlap with text */
+    margin: 0 auto; /* Center the container horizontally */
+    width: 90%; /* Set a percentage width */
 }
 
 #emotion-log li, #my-emotions-log li {
