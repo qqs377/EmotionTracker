@@ -44,7 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Clear any previous word cloud
     const canvas = document.getElementById("wordCloud");
-    canvas.width = canvas.width;  // Clears the canvas
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 400; // Match the max-height from CSS
+        
 
     // Use WordCloud.js to generate the cloud
     WordCloud(canvas, {
