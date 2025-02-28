@@ -3,9 +3,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".emotion");
     const canvas = document.getElementById("wordCloud");
-    const ctx = canvas.getContext("2d");
+    const emotionLog = document.getElementById("emotion-log"); //global log
+    const myEmotionsLog = document.getElementbyId("my-emotions-log");
+    
 
-    // Function to fetch emotion data from backend
+    // Function to fetch emotion data from backend for word cloud
     async function fetchEmotions() {
         try {
             const response = await fetch("https://emotiontracker.onrender.com/get-emotions");
@@ -16,6 +18,78 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Function to fetch emotion history and update the log
+    async function fetchEmotionHistory() {
+        try {
+            const response = await fetch("https://emotiontracker.onrender.com/get-emotion-history");
+            const data = await response.json();
+            updateGlobalLog(data);
+
+        } catch (error) {
+            console.error("Error fetching emotion history:", error);
+        }
+    }
+
+
+   // Function to update the global log UI
+    function updateGlobalLog(data) {
+            // Clear previous log entries
+            emotionLog.innerHTML = "";
+
+            // Add each emotion entry to the log
+            data.forEach(entry => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+                emotionLog.appendChild(listItem);
+            });
+    }
+
+    // Function to update "My Emotions" log UI
+    function updateMyEmotionsLog() {
+        const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
+        myEmotionsLog.innerHTML = ""; // Clear before appending new items
+
+        storedMyEmotions.forEach(entry => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
+            myEmotionsLog.appendChild(listItem);
+        });
+    }
+
+    // Function to send an emotion to the backend and save it locally
+    async function sendEmotion(emotion) {
+        const timestamp = new Date().toLocaleString("en-US", {
+            timeZone: "America/New_York",
+            weekday: "short",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+        });
+
+        try {
+            await fetch("https://emotiontracker.onrender.com/update-emotion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ emotion })
+            });
+
+            fetchEmotionHistory(); // Refresh global log
+
+            // Save to "My Emotions" log (local storage)
+            const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
+            storedMyEmotions.push({ emotion, timestamp }); // Add new emotion
+            localStorage.setItem("myEmotions", JSON.stringify(storedMyEmotions));
+
+            updateMyEmotionsLog(); // Refresh user-specific log
+        } catch (error) {
+            console.error("Error sending emotion data:", error);
+        }
+    }
+
+    
     // Function to send emotion data to backend
     async function sendEmotion(emotion) {
         try {
@@ -55,7 +129,7 @@ function generateWordCloud(emotionData) {
             canvas.width = window.innerWidth;  // Make the canvas span the full width
             canvas.height = window.innerHeight; 
 
-        // Use WordCloud.js to generate the cloud
+    // Use WordCloud.js to generate the cloud
      WordCloud(canvas, {
         list: words,
         gridSize: 8,
@@ -77,6 +151,7 @@ function generateWordCloud(emotionData) {
         });
     });
 
-    // Initial fetch to populate the word cloud
+    // Initial fetch, load stored data on page load
     fetchEmotions();
+    fetchEmotionHistory();
 });
