@@ -36,13 +36,14 @@ body {
 }
 
 /* Make the canvas full width */
+
 .chart-container {
-    width: 100vw;  /* Full viewport width */
-    height: 400px;  /* Set a reasonable height */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Prevent scrollbars */
+    justify-content: center; /* Centers the canvas horizontally */
+    align-items: center; /* Centers vertically */
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: auto;
 }
 
 canvas {
@@ -54,6 +55,7 @@ canvas {
     display: block;
     object-fit: contain;
 }
+
 
 
 
