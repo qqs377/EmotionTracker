@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storedMyEmotions.forEach(entry => {
             const listItem = document.createElement("li");
             listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
-            myEmotionsLog.appendChild(listItem);
+            myEmotionsLog.prepend(listItem); // Prepend to add the newest at the top
         });
     }
 
