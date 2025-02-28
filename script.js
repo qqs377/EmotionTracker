@@ -181,11 +181,21 @@ function generateWordCloud(emotionData) {
 
         // Clear any previous word cloud
         const canvas = document.getElementById("wordCloud");
-            //canvas.width = canvas.offsetWidth;
-            canvas.width = window.innerWidth;  // Make the canvas span the full width
-            canvas.height = window.innerHeight; 
+    
+     // Ensure the canvas has valid dimensions before using it
+    if (canvas) {
+        canvas.width = window.innerWidth;  // Make the canvas span the full width
+        canvas.height = window.innerHeight; // Adjust the height accordingly
+    }
 
+    // Check if the canvas width and height are valid before proceeding
+    if (canvas.width <= 0 || canvas.height <= 0) {
+        console.error("Invalid canvas size:", canvas.width, canvas.height);
+        return;
+    }
+    
     // Use WordCloud.js to generate the cloud
+    try{
      WordCloud(canvas, {
         list: words,
         gridSize: 8,
@@ -195,9 +205,10 @@ function generateWordCloud(emotionData) {
         drawOutOfBound: true, // Allow words to go outside the canvas
         //rotateRatio: 0, // Keep words unrotated to avoid them being pushed out
     });
+    } catch (err) {
+        console.error("Error generating word cloud:", err);
+    }
 }
-
-
 
     // Attach event listeners to buttons
     buttons.forEach(button => {
