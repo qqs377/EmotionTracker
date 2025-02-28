@@ -189,7 +189,11 @@ function generateWordCloud(emotionData) {
     if (canvas) {
         canvas.width = window.innerWidth;  // Make the canvas span the full width
         canvas.height = window.innerHeight; // Adjust the height accordingly
-    }
+    } else {
+    console.error("Canvas not found!");
+    return;
+}
+
 
     // Check if the canvas width and height are valid before proceeding
     if (canvas.width <= 0 || canvas.height <= 0) {
