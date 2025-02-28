@@ -66,6 +66,8 @@ function generateWordCloud(emotionData) {
         weightFactor: 2,
         color: "white",
         backgroundColor: "#7d6a66",
+        minSize: 10,  // Min font size
+        maxSize: 50,  // Max font size
     });
 }
   
