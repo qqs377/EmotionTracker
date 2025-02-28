@@ -19,11 +19,19 @@ body {
     margin-bottom: 20px;
 }
 
+/*.emotion-icons {
+    display: flex;
+   justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+} */
+
 .emotion-icons {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 2vw; /* Responsive gap */
+    margin-bottom: 3vh; /* Responsive bottom margin */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 
