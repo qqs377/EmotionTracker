@@ -66,23 +66,33 @@ canvas {
 
 .log-container {
     margin-top: 20px;
-    background-color: transparent; /* Make background transparent */
+    background-color: transparent; /* Keep background transparent */
     padding: 10px;
     border-radius: 5px;
     max-height: 300px;
     overflow-y: auto;
+    text-align: center; /* Center the text inside the container */
 }
 
-#emotion-log {
+.log-title {
+    color: white; /* Set text color to white */
+    font-size: 20px; /* Adjust title size */
+    font-weight: bold;
+    text-align: center; /* Center the title */
+    margin-bottom: 10px;
+}
+
+#emotion-log, #my-emotions-log {
     list-style-type: none;
     padding: 0;
     color: white; /* Set text color to white */
+    text-align: center; /* Center list items */
 }
 
-#emotion-log li {
+#emotion-log li, #my-emotions-log li {
     padding: 5px;
     font-size: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Light white border for separation */
+    display: block; /* Ensure full width for proper centering */
 }
-
 
