@@ -71,14 +71,18 @@ app.get("/get-emotions", (req, res) => {
     });
 });
 
-// Endpoint to fetch time-series emotion data for wave graph
+// Endpoint to fetch time-series emotion data for wave graph (limit to last 500 entries)
 app.get("/get-emotion-history", (req, res) => {
-    db.all("SELECT emotion, timestamp FROM emotions ORDER BY timestamp ASC", [], (err, rows) => {
+    db.all("SELECT emotion, timestamp FROM emotions ORDER BY timestamp DESC LIMIT 500", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
+
+        // Reverse the order to maintain chronological order
+        rows.reverse();
 
         res.json(rows);
     });
 });
+
 
 // Start the server
 app.listen(port, () => {
