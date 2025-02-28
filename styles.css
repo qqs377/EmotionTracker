@@ -42,16 +42,14 @@ body {
     justify-content: center; /* Centers the canvas horizontally */
     align-items: center; /* Centers vertically */
     width: 100%;
-    max-width: 600px; /* Adjust as needed */
     margin: auto;
 }
 
 canvas {
     width: 100%;
-    height: auto;
+    height: 400px;
     border: 1px solid lightgray;
     max-width: 100%;
-    max-height: 400px;
     display: block;
     object-fit: contain;
     margin-bottom: 20px;
