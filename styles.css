@@ -1,5 +1,8 @@
 body {
     background-color: #7d6a66;
+    background-size: cover; /* Cover entire screen */
+    background-position: center; /* Center image */
+    background-repeat: no-repeat; /* Do not repeat */
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
@@ -23,29 +26,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* Responsive styles for smaller screens */
-@media (max-width: 768px) { /* Adjusts for devices with screen width less than 768px (tablets & mobile phones) */
-    .emotion-icons {
-        gap: 10px; /* Reduce gap between icons */
-        margin-bottom: 20px; /* Adjust bottom margin */
-    }
-
-    .emotion-icons button {
-        flex: 1 0 20%; /* Ensure icons are responsive and fit within the screen */
-        margin: 5px; /* Add space around the icons */
-    }
-}
-
-/* Further adjustments for very small screens (phones) */
-@media (max-width: 480px) { /* Targets very small devices like phones */
-    .emotion-icons {
-        gap: 8px; /* Further reduce the gap for very small screens */
-    }
-
-    .emotion-icons button {
-        flex: 1 0 30%; /* Each button will take up 30% of the width on very small screens */
-    }
-}
 
 .emotion {
     background: none;
