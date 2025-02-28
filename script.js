@@ -79,6 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
         myEmotionsLog.innerHTML = ""; // Clear before appending new items
 
+        // Sort emotions in descending order by timestamp
+        storedMyEmotions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
         storedMyEmotions.forEach(entry => {
             const listItem = document.createElement("li");
             listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
@@ -139,9 +142,6 @@ function renderMyEmotions() {
             storedMyEmotions.push({ emotion, timestamp }); // Add new emotion
             localStorage.setItem("myEmotions", JSON.stringify(storedMyEmotions));
 
-            // Update the global emotion log instantly
-            addEmotionToLog("emotion-log", timestamp, emotion);
-
             // Update the user-specific emotion log instantly
             updateMyEmotionsLog(); 
 
@@ -151,7 +151,10 @@ function renderMyEmotions() {
                 .insert([{ emotion, timestamp }]);
 
             if (error) throw error;
-
+            
+            // Update the global emotion log instantly
+            addEmotionToLog("emotion-log", timestamp, emotion);
+            
             fetchEmotionHistory(); // Refresh global log
                  
             // Also fetch the latest emotions to update the word cloud
