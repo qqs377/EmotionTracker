@@ -16,16 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const { data, error } = await supabase
                 .from('emotions')
-                .select('emotion, count(*)')
-                .group('emotion');
+                .select('emotion');
 
             if (error) throw error;
-
-            const emotionData = {};
-            data.forEach(item => {
-                emotionData[item.emotion] = item.count;
-            });
             
+            //create an object to store the count of each emotion
+            const emotionData = {};
+
+            //count occurrences
+            data.forEach(item => {
+                if (emotionData[item.emotion]) {
+                emotionData[item.emotion]++;
+            } else {
+                emotionData[item.emotion] = 1;
+            }
+            });
+
+            //call the function to generate the word cloud
             generateWordCloud(data);
         } catch (error) {
             console.error("Error fetching emotion data:", error);
