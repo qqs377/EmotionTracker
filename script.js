@@ -80,8 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
         myEmotionsLog.innerHTML = ""; // Clear before appending new items
 
         // Sort emotions in descending order by timestamp
-        storedMyEmotions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
+        storedMyEmotions.sort((a, b) => {
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+        
         storedMyEmotions.forEach(entry => {
             const listItem = document.createElement("li");
             listItem.textContent = `${entry.timestamp} - ${entry.emotion}`;
