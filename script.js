@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             //call the function to generate the word cloud
             generateWordCloud(emotionData);
+            generateBarChart(emotionData);
+            
         } catch (error) {
             console.error("Error fetching emotion data:", error);
         }
@@ -171,7 +173,8 @@ function renderMyEmotions() {
     }
 
     
-
+//generate word cloud
+    
 function generateWordCloud(emotionData) {
         console.log("Emotion data:", emotionData);
 
@@ -223,6 +226,52 @@ function generateWordCloud(emotionData) {
         console.error("Error generating word cloud:", err);
     }
 }
+
+
+//generate bar chart
+function generateBarChart(emotionData) {
+    const ctx = document.getElementById("emotionBarChart").getContext("2d");
+
+    // Extract emotions and counts
+    const emotions = Object.keys(emotionData);
+    const counts = Object.values(emotionData);
+
+    // Destroy existing chart instance if it exists (to prevent duplication)
+    if (window.emotionBarChart instanceof Chart) {
+        window.emotionBarChart.destroy();
+    }
+
+    // Create a new bar chart
+    window.emotionBarChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: emotions,
+            datasets: [{
+                data: counts,
+                backgroundColor: "white", // White bars
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: "white" } // White text for labels
+                },
+                y: {
+                    display: false // Hide Y-axis completely
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+    
 
     // Attach event listeners to buttons
     buttons.forEach(button => {
