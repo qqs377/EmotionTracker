@@ -78,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateMyEmotionsLog() {
         const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
         console.log("Stored emotions:", storedMyEmotions);
-        
-        myEmotionsLog.innerHTML = ""; // Clear before appending new items
 
         // Sort emotions in descending order by timestamp
         storedMyEmotions.sort((a, b) => {
         return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     });
+
+        myEmotionsLog.innerHTML = ""; // Clear before appending new items
         
         storedMyEmotions.forEach(entry => {
             const listItem = document.createElement("li");
