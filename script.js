@@ -232,9 +232,13 @@ function generateWordCloud(emotionData) {
 function generateBarChart(emotionData) {
     const ctx = document.getElementById("emotionBarChart").getContext("2d");
 
-    // Extract emotions and counts
-    const emotions = Object.keys(emotionData);
-    const counts = Object.values(emotionData);
+    // Define the fixed order of emotions
+    const predefinedOrder = ["happy", "sad", "angry", "excited", "calm", "anxious"];
+    
+    // Sort the emotionData based on predefined order
+    const sortedEmotions = predefinedOrder.filter(emotion => emotionData[emotion] !== undefined); // Filter to keep only the emotions present in the data
+    const sortedCounts = sortedEmotions.map(emotion => emotionData[emotion]);
+
 
     // Destroy existing chart instance if it exists (to prevent duplication)
     if (window.emotionBarChart instanceof Chart) {
@@ -245,9 +249,9 @@ function generateBarChart(emotionData) {
     window.emotionBarChart = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: emotions,
+            labels: sortedEmotions,
             datasets: [{
-                data: counts,
+                data: sortedCounts,
                 backgroundColor: "white", // White bars
                 borderWidth: 0
             }]
