@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to update "My Emotions" log UI
     function updateMyEmotionsLog() {
         const storedMyEmotions = JSON.parse(localStorage.getItem("myEmotions") || "[]");
-        console.log("Stored emotions:", storedMyEmotions);
+        //console.log("Stored emotions:", storedMyEmotions); // debug report code
 
         // Sort emotions in descending order by timestamp
         storedMyEmotions.sort((a, b) => {
