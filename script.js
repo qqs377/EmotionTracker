@@ -64,7 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Sort by timestamp (newest first)
             //data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+            data.sort((a, b) => {
+                let dateA = a.timestamp.replace(" at", "");
+                let dateB = b.timestamp.replace(" at", "");
+
+                return new Date(dateB).toISOString().localeCompare(new Date(dateA).toISOString());
+            });
         
             // Clear previous log entries
             emotionLog.innerHTML = "";
