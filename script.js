@@ -63,7 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateGlobalLog(data) {
 
             // Sort by timestamp (newest first)
-            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            //data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         
             // Clear previous log entries
             emotionLog.innerHTML = "";
